@@ -103,7 +103,7 @@ FlatCurveEditorSubGroup::FlatCurveEditorSubGroup (CurveEditorGroup* prt, Glib::u
     {
         std::vector<Axis> axis;
         axis.resize(4);
-        axis.at(0).setValues(M("CURVEEDITOR_AXIS_IN"), 5, 0.001, 0.01, 0., 1.);
+        axis.at(0).setValues(M("CURVEEDITOR_AXIS_IN"), 5, 1., 1., 0., 360.);
         axis.at(1).setValues(M("CURVEEDITOR_AXIS_OUT"), 5, 0.001, 0.01, 0., 1.);
         axis.at(2).setValues(M("CURVEEDITOR_AXIS_LEFT_TAN"), 5, 0.01, 0.1, 0., 1.);
         axis.at(3).setValues(M("CURVEEDITOR_AXIS_RIGHT_TAN"), 5, 0.01, 0.1, 0., 1.);
