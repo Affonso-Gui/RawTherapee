@@ -128,6 +128,7 @@ set(RTENGINESOURCEFILES
     iplabregions.cc
     iplocalcontrast.cc
     ipresize.cc
+    ipresizewidth.cc
     ipretinex.cc
     ipshadowshighlights.cc
     ipsharpen.cc

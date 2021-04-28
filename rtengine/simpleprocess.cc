@@ -1682,6 +1682,7 @@ private:
 
         int imw, imh;
         double tmpScale = ipf.resizeScale(&params, fw, fh, imw, imh);
+        double widthScale = params.resizewidth.enabled ? params.resizewidth.strength : 1.0;
         bool labResize = params.resize.enabled && params.resize.method != "Nearest" && (tmpScale != 1.0 || params.prsharpening.enabled);
         LabImage *tmplab;
 
@@ -1776,6 +1777,15 @@ private:
             ipf.resize(readyImg, tempImage, tmpScale);
             delete readyImg;
             readyImg = tempImage;
+        }
+        if (widthScale != 1.0) {
+          int w, h;
+          w = readyImg->getWidth();
+          h = readyImg->getHeight();
+          Imagefloat* tempImage = new Imagefloat(int(widthScale*w), h);
+          ipf.resizeWidth(readyImg, tempImage, widthScale);
+          delete readyImg;
+          readyImg = tempImage;
         }
 
         switch (params.metadata.mode) {

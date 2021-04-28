@@ -208,6 +208,7 @@ enum class BlurType {
     float resizeScale(const procparams::ProcParams* params, int fw, int fh, int &imw, int &imh);
     void lab2monitorRgb(LabImage* lab, Image8* image);
     void resize(Imagefloat* src, Imagefloat* dst, float dScale);
+    void resizeWidth(Imagefloat* src, Imagefloat* dst, float dScale);
     void Lanczos(const LabImage* src, LabImage* dst, float scale);
     void Lanczos(const Imagefloat* src, Imagefloat* dst, float scale);
 

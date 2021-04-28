@@ -1,0 +1,67 @@
+/*
+ *  This file is part of RawTherapee.
+ *
+ *  Copyright (c) 2004-2010 Gabor Horvath <hgabor@rawtherapee.com>
+ *
+ *  RawTherapee is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  RawTherapee is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with RawTherapee.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "improcfun.h"
+
+#include "imagefloat.h"
+#include "rt_math.h"
+// #include "procparams.h"
+
+//#define PROFILE
+
+#ifdef PROFILE
+#   include <iostream>
+#endif
+
+
+namespace rtengine
+{
+
+
+void ImProcFunctions::resizeWidth (Imagefloat* src, Imagefloat* dst, float dScale)
+{
+#ifdef PROFILE
+    time_t t1 = clock();
+#endif
+
+    // Nearest neighbour algorithm
+#ifdef _OPENMP
+#pragma omp parallel for if (multiThread)
+#endif
+
+    for (int i = 0; i < dst->getHeight(); i++) {
+      int sy = LIM (i, 0, src->getHeight() - 1);
+
+      for (int j = 0; j < dst->getWidth(); j++) {
+        int sx = j / dScale;
+        sx = LIM (sx, 0, src->getWidth() - 1);
+        dst->r (i, j) = src->r (sy, sx);
+        dst->g (i, j) = src->g (sy, sx);
+        dst->b (i, j) = src->b (sy, sx);
+      }
+    }
+
+#ifdef PROFILE
+    time_t t2 = clock();
+    std::cout << "Resize: " << params->resize.method << ": "
+              << (float) (t2 - t1) / CLOCKS_PER_SEC << std::endl;
+#endif
+}
+
+}
