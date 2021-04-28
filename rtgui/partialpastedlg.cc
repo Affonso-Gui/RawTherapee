@@ -265,6 +265,7 @@ PartialPasteDlg::PartialPasteDlg (const Glib::ustring &title, Gtk::Window* paren
     crop         = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_CROP")));
     resize       = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_RESIZE")));
     prsharpening = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_PRSHARPENING")));
+    resizewidth  = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_RESIZE_WIDTH")));
     perspective  = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_PERSPECTIVE")));
     commonTrans  = Gtk::manage (new Gtk::CheckButton (M("PARTIALPASTE_COMMONTRANSFORMPARAMS")));
 
@@ -381,6 +382,7 @@ PartialPasteDlg::PartialPasteDlg (const Glib::ustring &title, Gtk::Window* paren
     vboxes[4]->pack_start (*crop, Gtk::PACK_SHRINK, 2);
     vboxes[4]->pack_start (*resize, Gtk::PACK_SHRINK, 2);
     vboxes[4]->pack_start (*prsharpening, Gtk::PACK_SHRINK, 2);
+    vboxes[4]->pack_start (*resizewidth, Gtk::PACK_SHRINK, 2);
     vboxes[4]->pack_start (*perspective, Gtk::PACK_SHRINK, 2);
     vboxes[4]->pack_start (*commonTrans, Gtk::PACK_SHRINK, 2);
 
@@ -542,6 +544,7 @@ PartialPasteDlg::PartialPasteDlg (const Glib::ustring &title, Gtk::Window* paren
     cropConn        = crop->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
     resizeConn      = resize->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
     prsharpeningConn = prsharpening->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
+    resizewidthConn = resizewidth->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
     perspectiveConn = perspective->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
     commonTransConn = commonTrans->signal_toggled().connect (sigc::bind (sigc::mem_fun(*composition, &Gtk::CheckButton::set_inconsistent), true));
 
@@ -813,6 +816,7 @@ void PartialPasteDlg::compositionToggled ()
     ConnectionBlocker cropBlocker(cropConn);
     ConnectionBlocker resizeBlocker(resizeConn);
     ConnectionBlocker prsharpeningBlocker(prsharpeningConn);
+    ConnectionBlocker resizewidthBlocker(resizewidthConn);
     ConnectionBlocker perspectiveBlocker(perspectiveConn);
     ConnectionBlocker commonTransBlocker(commonTransConn);
 
@@ -823,6 +827,7 @@ void PartialPasteDlg::compositionToggled ()
     crop->set_active (composition->get_active ());
     resize->set_active (composition->get_active ());
     prsharpening->set_active (composition->get_active ());
+    resizewidth->set_active (composition->get_active ());
     perspective->set_active (composition->get_active ());
     commonTrans->set_active (composition->get_active ());
 }
@@ -1027,6 +1032,10 @@ void PartialPasteDlg::applyPaste (rtengine::procparams::ProcParams* dstPP, Param
 
     if (!prsharpening->get_active ()) {
         filterPE.prsharpening      = falsePE.prsharpening;
+    }
+
+    if (!resizewidth->get_active ()) {
+      filterPE.resizewidth   = falsePE.resizewidth;
     }
 
     if (!perspective->get_active ()) {

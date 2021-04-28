@@ -336,6 +336,10 @@ Gtk::Widget* Preferences::getBatchProcPanel()
     mi->set_value(behavColumns.label, M("TP_RESIZE_LABEL"));
     appendBehavList(mi, M("TP_RESIZE_SCALE"), ADDSET_RESIZE_SCALE, true);
 
+    mi = behModel->append();
+    mi->set_value ( behavColumns.label, M ("TP_RESIZE_WIDTH_LABEL") );
+    appendBehavList ( mi, M ( "TP_RESIZE_WIDTH_STRENGTH" ), ADDSET_RESIZE_WIDTH_STRENGTH, true );
+
 
     mi = behModel->append();
     mi->set_value(behavColumns.label, M("TP_DISTORTION_LABEL"));

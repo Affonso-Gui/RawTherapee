@@ -1728,6 +1728,8 @@ void ParamsEdited::initFrom(const std::vector<rtengine::procparams::ProcParams>&
         spot.enabled = spot.enabled && p.spot.enabled == other.spot.enabled;
         spot.entries = spot.entries && p.spot.entries == other.spot.entries;
         resize.allowUpscaling = resize.allowUpscaling && p.resize.allowUpscaling == other.resize.allowUpscaling;
+        resizewidth.enabled = resizewidth.enabled && p.resizewidth.enabled == other.resizewidth.enabled;
+        resizewidth.strength = resizewidth.strength && p.resizewidth.strength == other.resizewidth.strength;
         icm.inputProfile = icm.inputProfile && p.icm.inputProfile == other.icm.inputProfile;
         icm.toneCurve = icm.toneCurve && p.icm.toneCurve == other.icm.toneCurve;
         icm.applyLookTable = icm.applyLookTable && p.icm.applyLookTable == other.icm.applyLookTable;
@@ -5738,6 +5740,14 @@ void ParamsEdited::combine(rtengine::procparams::ProcParams& toEdit, const rteng
 
     if (resize.allowUpscaling) {
         toEdit.resize.allowUpscaling = mods.resize.allowUpscaling;
+    }
+
+    if (resizewidth.enabled) {
+      toEdit.resizewidth.enabled = mods.resizewidth.enabled;
+    }
+
+    if (resizewidth.strength) {
+      toEdit.resizewidth.strength = dontforceSet && options.baBehav[ADDSET_RESIZE_WIDTH_STRENGTH] ? toEdit.resizewidth.strength + mods.resizewidth.strength : mods.resizewidth.strength;
     }
 
     if (icm.inputProfile) {
