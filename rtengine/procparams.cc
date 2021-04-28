@@ -5467,6 +5467,8 @@ void ProcParams::setDefaults()
 
     resize = {};
 
+    resizewidth = {};
+
     icm = {};
 
     wavelet = {};
@@ -6566,6 +6568,10 @@ int ProcParams::save(const Glib::ustring& fname, const Glib::ustring& fname2, bo
         saveToKeyfile(!pedited || pedited->resize.longedge, "Resize", "LongEdge", resize.longedge, keyFile);
         saveToKeyfile(!pedited || pedited->resize.shortedge, "Resize", "ShortEdge", resize.shortedge, keyFile);
         saveToKeyfile(!pedited || pedited->resize.allowUpscaling, "Resize", "AllowUpscaling", resize.allowUpscaling, keyFile);
+
+// Resize Width
+        saveToKeyfile(!pedited || pedited->resizewidth.enabled, "Resize Width", "Enabled", resizewidth.enabled, keyFile);
+        saveToKeyfile(!pedited || pedited->resizewidth.strength, "Resize Width", "Strength", resizewidth.strength, keyFile);
 
 // Post demosaic sharpening
         saveToKeyfile(!pedited || pedited->pdsharpening.enabled, "PostDemosaicSharpening", "Enabled", pdsharpening.enabled, keyFile);
@@ -8640,6 +8646,11 @@ int ProcParams::load(const Glib::ustring& fname, ParamsEdited* pedited)
                     break;
                 }
             } while (1);
+        }
+
+        if (keyFile.has_group("Resize Width")) {
+          assignFromKeyfile(keyFile, "Resize Width", "Enabled", pedited, resizewidth.enabled, pedited->resizewidth.enabled);
+          assignFromKeyfile(keyFile, "Resize Width", "Strength", pedited, resizewidth.strength, pedited->resizewidth.strength);
         }
 
         if (keyFile.has_group("PostDemosaicSharpening")) {
