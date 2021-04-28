@@ -66,6 +66,7 @@
 #include "rawcacorrection.h"
 #include "rawexposure.h"
 #include "resize.h"
+#include "resizewidth.h"
 #include "retinex.h"
 #include "rgbcurves.h"
 #include "rotate.h"
@@ -128,6 +129,7 @@ protected:
     ChMixer* chmixer;
     BlackWhite* blackwhite;
     Resize* resize;
+    ResizeWidth* resizewidth;
     PrSharpening* prsharpening;
     ICMPanel* icm;
     Crop* crop;

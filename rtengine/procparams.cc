@@ -2254,6 +2254,25 @@ bool ResizeParams::operator !=(const ResizeParams& other) const
     return !(*this == other);
 }
 
+ResizeWidthParams::ResizeWidthParams() :
+    enabled(false),
+    strength(1.)
+{
+}
+
+bool ResizeWidthParams::operator ==(const ResizeWidthParams& other) const
+{
+    return
+        enabled == other.enabled
+        && strength == other.strength;
+}
+
+bool ResizeWidthParams::operator !=(const ResizeWidthParams& other) const
+{
+    return !(*this == other);
+}
+
+
 const Glib::ustring ColorManagementParams::NoICMString = Glib::ustring("No ICM: sRGB output");
 const Glib::ustring ColorManagementParams::NoProfileString = Glib::ustring("(none)");
 

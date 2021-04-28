@@ -433,6 +433,8 @@ void ParamsEdited::set(bool v)
     spot.entries = v;
 
     resize.allowUpscaling = v;
+    resizewidth.enabled = v;
+    resizewidth.strength = v;
     icm.inputProfile = v;
     icm.toneCurve = v;
     icm.applyLookTable = v;

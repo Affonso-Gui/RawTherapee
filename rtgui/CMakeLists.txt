@@ -131,6 +131,7 @@ set(NONCLISOURCEFILES
     recentbrowser.cc
     renamedlg.cc
     resize.cc
+    resizewidth.cc
     retinex.cc
     rgbcurves.cc
     rotate.cc

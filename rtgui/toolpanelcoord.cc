@@ -76,6 +76,7 @@ ToolPanelCoordinator::ToolPanelCoordinator (bool batch) : ipc (nullptr), favorit
     chmixer             = Gtk::manage(new ChMixer());
     blackwhite          = Gtk::manage(new BlackWhite());
     resize              = Gtk::manage(new Resize());
+    resizewidth         = Gtk::manage(new ResizeWidth());
     prsharpening        = Gtk::manage(new PrSharpening());
     crop                = Gtk::manage(new Crop());
     icm                 = Gtk::manage(new ICMPanel());
@@ -146,6 +147,7 @@ ToolPanelCoordinator::ToolPanelCoordinator (bool batch) : ipc (nullptr), favorit
     
     addfavoritePanel (transformPanel, crop);
     addfavoritePanel (transformPanel, resize);
+    addfavoritePanel (transformPanel, resizewidth);
     addPanel (resize->getPackBox(), prsharpening, 2);
     addfavoritePanel (transformPanel, lensgeom);
     addfavoritePanel (lensgeom->getPackBox(), rotate, 2);

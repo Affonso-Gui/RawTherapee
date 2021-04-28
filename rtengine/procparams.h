@@ -1700,6 +1700,16 @@ struct ResizeParams {
     bool operator !=(const ResizeParams& other) const;
 };
 
+struct ResizeWidthParams {
+    bool enabled;
+    double strength;
+
+    ResizeWidthParams();
+
+    bool operator==(const ResizeWidthParams &other) const;
+    bool operator!=(const ResizeWidthParams &other) const;
+};
+
 /**
   * Parameters entry
   */
@@ -2425,6 +2435,7 @@ public:
     BlackWhiteParams        blackwhite;      ///< Black&  White parameters
     ResizeParams            resize;          ///< Resize parameters
     SpotParams              spot;            ///< Spot removal tool
+    ResizeWidthParams       resizewidth;     ///< Resize Width parameters
     ColorManagementParams   icm;             ///< profiles/color spaces used during the image processing
     RAWParams               raw;             ///< RAW parameters before demosaicing
     WaveletParams           wavelet;         ///< Wavelet parameters

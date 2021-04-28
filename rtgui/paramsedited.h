@@ -1089,11 +1089,17 @@ struct ResizeParamsEdited {
     bool allowUpscaling;
 };
 
+
 class SpotParamsEdited
 {
 public:
     bool enabled;
     bool entries;
+};
+
+struct ResizeWidthParamsEdited {
+    bool enabled;
+    bool strength;
 };
 
 struct ColorManagementParamsEdited {
@@ -1447,6 +1453,7 @@ struct ParamsEdited {
     BlackWhiteParamsEdited blackwhite;
     ResizeParamsEdited resize;
     SpotParamsEdited spot;
+    ResizeWidthParamsEdited resizewidth;
     ColorManagementParamsEdited icm;
     RAWParamsEdited raw;
     DirPyrEqualizerParamsEdited dirpyrequalizer;
