@@ -199,10 +199,12 @@ ICMPanel::ICMPanel() : FoldableToolPanel(this, "icm", M("TP_ICM_LABEL")), iuncha
     wFrame->add(*wProfVBox);
 
     //-----------------gamma TRC working
+    //to re-enable primaries and illuminant you must uncomment lines 207 242 264 373 - change in language default TP_ICM_TRCFRAME;Abstract Profile and uncomment TP_ICM_TRCFRAME_TOOLTIP;
+    //remove lines 813 842 to re-enable primaries and illuminant - change tooltip TP_ICM_TRC_TOOLTIP;
     Gtk::Frame *trcFrame = Gtk::manage(new Gtk::Frame(M("TP_ICM_TRCFRAME")));
     trcFrame->set_label_align(0.025, 0.5);
     Gtk::VBox *trcProfVBox = Gtk::manage(new Gtk::VBox());
-    trcFrame->set_tooltip_text(M("TP_ICM_TRCFRAME_TOOLTIP"));
+    // trcFrame->set_tooltip_text(M("TP_ICM_TRCFRAME_TOOLTIP"));
 
     wTRCBox = Gtk::manage(new Gtk::Box());
 
@@ -237,7 +239,7 @@ ICMPanel::ICMPanel() : FoldableToolPanel(this, "icm", M("TP_ICM_LABEL")), iuncha
     willuBox->pack_start(*willulab, Gtk::PACK_SHRINK);
     will = Gtk::manage(new MyComboBoxText());
     willuBox->pack_start(*will, Gtk::PACK_EXPAND_WIDGET);
-    trcProfVBox->pack_start(*willuBox, Gtk::PACK_EXPAND_WIDGET);
+//    trcProfVBox->pack_start(*willuBox, Gtk::PACK_EXPAND_WIDGET);//uncomment to re-enable all primaries illuminant
     will->append(M("TP_ICM_WORKING_ILLU_NONE"));
     will->append(M("TP_ICM_WORKING_ILLU_D41"));
     will->append(M("TP_ICM_WORKING_ILLU_D50"));
@@ -259,7 +261,7 @@ ICMPanel::ICMPanel() : FoldableToolPanel(this, "icm", M("TP_ICM_LABEL")), iuncha
     wprimBox->pack_start(*wprimlab, Gtk::PACK_SHRINK);
     wprim = Gtk::manage(new MyComboBoxText());
     wprimBox->pack_start(*wprim, Gtk::PACK_EXPAND_WIDGET);
-    trcProfVBox->pack_start(*wprimBox, Gtk::PACK_EXPAND_WIDGET);
+//    trcProfVBox->pack_start(*wprimBox, Gtk::PACK_EXPAND_WIDGET);//uncomment to re-enable all primaries illuminant
     wprim->append(M("TP_ICM_WORKING_PRIM_NONE"));
     wprim->append(M("TP_ICM_WORKING_PRIM_SRGB"));
     wprim->append(M("TP_ICM_WORKING_PRIM_ADOB"));
@@ -368,7 +370,7 @@ ICMPanel::ICMPanel() : FoldableToolPanel(this, "icm", M("TP_ICM_LABEL")), iuncha
 
     pack_start(*wFrame, Gtk::PACK_EXPAND_WIDGET);
     pack_start(*trcFrame, Gtk::PACK_EXPAND_WIDGET);
-    pack_start(*redFrame, Gtk::PACK_EXPAND_WIDGET);
+//    pack_start(*redFrame, Gtk::PACK_EXPAND_WIDGET);//uncomment to re-enable all primaries illuminant
 
 
     // ---------------------------- Output profile
@@ -808,6 +810,7 @@ void ICMPanel::read(const ProcParams* pp, const ParamsEdited* pedited)
     } else if (pp->icm.will == "1500") {
         will->set_active(10);
     }
+    will->set_active(0);//remove to re-enable primaries and illuminant
 
     if (pp->icm.wprim == "def") {
         wprim->set_active(0);
@@ -836,6 +839,8 @@ void ICMPanel::read(const ProcParams* pp, const ParamsEdited* pedited)
     } else if (pp->icm.wprim == "cusgr") {
         wprim->set_active(12);
     }
+    wprim->set_active(0);//remove to re-enable primaries and illuminant
+
     wtrcinChanged();
     willChanged();
     wprimChanged();
