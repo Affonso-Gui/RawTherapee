@@ -810,13 +810,16 @@ void Crop::update(int todo)
     }
 
     const bool needstransform  = parent->ipf.needsTransform(skips(parent->fw, skip), skips(parent->fh, skip), parent->imgsrc->getRotateDegree(), parent->imgsrc->getMetaData());
+    const bool needsresize = params.resizewidth.enabled && params.resizewidth.strength != 1.;
     // transform
-    if (needstransform || ((todo & (M_TRANSFORM | M_RGBCURVE)) && params.dirpyrequalizer.cbdlMethod == "bef" && params.dirpyrequalizer.enabled && !params.colorappearance.enabled)) {
+    if (needstransform || needsresize || ((todo & (M_TRANSFORM | M_RGBCURVE)) && params.dirpyrequalizer.cbdlMethod == "bef" && params.dirpyrequalizer.enabled && !params.colorappearance.enabled)) {
         if (!transCrop) {
             transCrop = new Imagefloat(cropw, croph);
         }
 
-        if (needstransform)
+        if (needsresize)
+          parent->ipf.resizeHeight(baseCrop, transCrop, params.resizewidth.strength);
+        else if (needstransform)
             parent->ipf.transform(baseCrop, transCrop, cropx / skip, cropy / skip, trafx / skip, trafy / skip, skips(parent->fw, skip), skips(parent->fh, skip), parent->getFullWidth(), parent->getFullHeight(),
                                   parent->imgsrc->getMetaData(),
                                   parent->imgsrc->getRotateDegree(), false);
