@@ -139,6 +139,7 @@ HistogramPanel::HistogramPanel () :
     Gtk::Image* waveImage = Gtk::manage(new RTImage("histogram-type-waveform-small.png"));
     Gtk::Image* vectHcImage = Gtk::manage(new RTImage("histogram-type-vectorscope-hc-small.png"));
     Gtk::Image* vectHsImage = Gtk::manage(new RTImage("histogram-type-vectorscope-hs-small.png"));
+    Gtk::Image* vectHvImage = Gtk::manage(new RTImage("histogram-type-vectorscope-hs-small.png"));
 
     showRed   = Gtk::manage (new Gtk::ToggleButton ());
     showGreen = Gtk::manage (new Gtk::ToggleButton ());
@@ -260,7 +261,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->set_image(*waveImage);
     scopeVectHcBtn->set_image(*vectHcImage);
     scopeVectHsBtn->set_image(*vectHsImage);
-    scopeVectHvBtn->set_image(*vectHsImage);
+    scopeVectHvBtn->set_image(*vectHvImage);
     switch(options.histogramScopeType) {
         case ScopeType::HISTOGRAM:
             scopeHistBtn->set_active();
@@ -348,9 +349,9 @@ HistogramPanel::HistogramPanel () :
     persistentButtons->add(*scopeHistRawBtn);
     persistentButtons->add(*scopeParadeBtn);
     persistentButtons->add(*scopeWaveBtn);
-    persistentButtons->add(*scopeVectHvBtn);
     persistentButtons->add(*scopeVectHsBtn);
     persistentButtons->add(*scopeVectHcBtn);
+    persistentButtons->add(*scopeVectHvBtn);
     persistentButtons->add(*separator);
     persistentButtons->add(*scopeOptions);
 
