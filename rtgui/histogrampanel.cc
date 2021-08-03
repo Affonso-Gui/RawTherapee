@@ -1319,7 +1319,7 @@ void HistogramArea::updateBackBuffer ()
             cr->line_to(w, ypos);
             cr->stroke();
         }
-    } else if (options.histogramScopeType == ScopeType::VECTORSCOPE_HC || options.histogramScopeType == ScopeType::VECTORSCOPE_HS) {
+    } else if (options.histogramScopeType == ScopeType::VECTORSCOPE_HC || options.histogramScopeType == ScopeType::VECTORSCOPE_HS || options.histogramScopeType == ScopeType::VECTORSCOPE_HV) {
         // Vectorscope has no gridlines.
     } else if (options.histogramDrawMode == 0) {
         for (int i = 1; i < nrOfHGridPartitions; i++) {
@@ -1450,7 +1450,9 @@ void HistogramArea::updateBackBuffer ()
         drawParade(cr, w, h);
     } else if (scopeType == ScopeType::WAVEFORM && rwave.getWidth() > 0) {
         drawWaveform(cr, w, h);
-    } else if (scopeType == ScopeType::VECTORSCOPE_HC || scopeType == ScopeType::VECTORSCOPE_HS) {
+    } else if (scopeType == ScopeType::VECTORSCOPE_HC ||
+               scopeType == ScopeType::VECTORSCOPE_HS ||
+               scopeType == ScopeType::VECTORSCOPE_HV) {
         drawVectorscope(cr, w, h);
     }
 
@@ -1658,9 +1660,9 @@ void HistogramArea::drawVectorscope(Cairo::RefPtr<Cairo::Context> &cr, int w, in
     const auto& vect = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc :
       (scopeType == ScopeType::VECTORSCOPE_HS) ? vect_hs : vect_hv;
     auto& vect_buffer = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer :
-      (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hs_buffer : vect_hv_buffer;
+      (scopeType == ScopeType::VECTORSCOPE_HS) ? vect_hs_buffer : vect_hv_buffer;
     auto& vect_buffer_dirty = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer_dirty :
-      (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hs_buffer_dirty : vect_hv_buffer_dirty;
+      (scopeType == ScopeType::VECTORSCOPE_HS) ? vect_hs_buffer_dirty : vect_hv_buffer_dirty;
 
     const int vect_width = vect.getWidth();
     const int vect_height = vect.getHeight();
@@ -2025,6 +2027,7 @@ bool HistogramArea::on_motion_notify_event (GdkEventMotion* event)
         || scopeType == ScopeType::WAVEFORM
         || scopeType == ScopeType::VECTORSCOPE_HC
         || scopeType == ScopeType::VECTORSCOPE_HS
+        || scopeType == ScopeType::VECTORSCOPE_HV
     ) { // Adjust brightness.
         constexpr float RANGE = MAX_BRIGHT / MIN_BRIGHT;
         double dx = (event->x - movingPosition) / get_width();
@@ -2045,7 +2048,7 @@ void HistogramArea::setBrightness(float brightness)
 {
     brightness = LIM<float>(brightness, MIN_BRIGHT, MAX_BRIGHT);
     if (brightness != trace_brightness) {
-        parade_buffer_r_dirty = parade_buffer_g_dirty = parade_buffer_b_dirty = wave_buffer_dirty = wave_buffer_luma_dirty = vect_hc_buffer_dirty = vect_hs_buffer_dirty = true;
+        parade_buffer_r_dirty = parade_buffer_g_dirty = parade_buffer_b_dirty = wave_buffer_dirty = wave_buffer_luma_dirty = vect_hc_buffer_dirty = vect_hs_buffer_dirty = vect_hv_buffer_dirty = true;
         trace_brightness = brightness;
         setDirty(true);
         queue_draw();

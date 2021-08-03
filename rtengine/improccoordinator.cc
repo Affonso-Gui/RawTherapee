@@ -1917,7 +1917,7 @@ void ImProcCoordinator::updatePreviewImage(int todo, bool panningRelatedChange)
             imageListener->imageReady(params->crop);
         }
 
-        hist_lrgb_dirty = vectorscope_hc_dirty = vectorscope_hs_dirty = waveform_dirty = true;
+        hist_lrgb_dirty = vectorscope_hc_dirty = vectorscope_hs_dirty = vectorscope_hv_dirty = waveform_dirty = true;
         if (hListener) {
             if (hListener->updateHistogram()) {
                 updateLRGBHistograms();
