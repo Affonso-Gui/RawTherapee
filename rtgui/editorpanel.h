@@ -137,6 +137,7 @@ public:
         int vectorscopeScale,
         const array2D<int>& vectorscopeHC,
         const array2D<int>& vectorscopeHS,
+        const array2D<int>& vectorscopeHV,
         int waveformScale,
         const array2D<int>& waveformRed,
         const array2D<int>& waveformGreen,

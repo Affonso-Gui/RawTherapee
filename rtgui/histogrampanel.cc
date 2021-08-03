@@ -322,7 +322,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeWaveBtn));
     scopeVectHcBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHcBtn));
     scopeVectHsBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHsBtn));
-    scopeVectHvBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHsBtn));
+    scopeVectHvBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHvBtn));
 
     brightnessWidget = Gtk::manage(new Gtk::Scale(Gtk::ORIENTATION_VERTICAL));
     brightnessWidget->set_inverted();
@@ -1069,8 +1069,8 @@ void HistogramRGBAreaVert::get_preferred_width_for_height_vfunc (int height, int
 // HistogramArea
 HistogramArea::HistogramArea (DrawModeListener *fml) :
     vectorscope_scale(0),
-    vect_hc(0, 0), vect_hs(0, 0),
-    vect_hc_buffer_dirty(true), vect_hs_buffer_dirty(true),
+    vect_hc(0, 0), vect_hs(0, 0), vect_hv(0, 0),
+    vect_hc_buffer_dirty(true), vect_hs_buffer_dirty(true), vect_hv_buffer_dirty(true),
     waveform_scale(0),
     rwave(0, 0), gwave(0, 0),bwave(0, 0), lwave(0, 0),
     parade_buffer_r_dirty(true), parade_buffer_g_dirty(true), parade_buffer_b_dirty(true),
@@ -1176,6 +1176,7 @@ void HistogramArea::update(
     int vectorscopeScale,
     const array2D<int>& vectorscopeHC,
     const array2D<int>& vectorscopeHS,
+    const array2D<int>& vectorscopeHV,
     int waveformScale,
     const array2D<int>& waveformRed,
     const array2D<int>& waveformGreen,
@@ -1218,8 +1219,8 @@ void HistogramArea::update(
                 break;
             case ScopeType::VECTORSCOPE_HV:
                 vectorscope_scale = vectorscopeScale;
-                vect_hs = vectorscopeHS;
-                vect_hs_buffer_dirty = true;
+                vect_hv = vectorscopeHV;
+                vect_hv_buffer_dirty = true;
                 break;
             case ScopeType::NONE:
                 break;
@@ -1647,13 +1648,18 @@ void HistogramArea::drawParade(Cairo::RefPtr<Cairo::Context> &cr, int w, int h)
 
 void HistogramArea::drawVectorscope(Cairo::RefPtr<Cairo::Context> &cr, int w, int h)
 {
-    if (scopeType != ScopeType::VECTORSCOPE_HC && scopeType != ScopeType::VECTORSCOPE_HS) {
+    if (scopeType != ScopeType::VECTORSCOPE_HC &&
+        scopeType != ScopeType::VECTORSCOPE_HS &&
+        scopeType != ScopeType::VECTORSCOPE_HV) {
         return;
     }
 
-    const auto& vect = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc : vect_hs;
-    auto& vect_buffer = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer : vect_hs_buffer;
-    auto& vect_buffer_dirty = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer_dirty : vect_hs_buffer_dirty;
+    const auto& vect = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc :
+      (scopeType == ScopeType::VECTORSCOPE_HS) ? vect_hs : vect_hv;
+    auto& vect_buffer = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer :
+      (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hs_buffer : vect_hv_buffer;
+    auto& vect_buffer_dirty = (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hc_buffer_dirty :
+      (scopeType == ScopeType::VECTORSCOPE_HC) ? vect_hs_buffer_dirty : vect_hv_buffer_dirty;
 
     const int vect_width = vect.getWidth();
     const int vect_height = vect.getHeight();
@@ -1778,6 +1784,47 @@ void HistogramArea::drawVectorscope(Cairo::RefPtr<Cairo::Context> &cr, int w, in
         // CIELAB skin tone line, approximated by 50% saturation and
         // value along the HSV skin tone line.
         cr->rotate(-0.321713 * RT_PI);
+        cr->move_to(0, 0);
+        cr->line_to(line_length, 0);
+        cr->stroke();
+        cr->unset_dash();
+    } else if (scopeType == ScopeType::VECTORSCOPE_HV) { // Hue-Saturation.
+        // RYGCBM lines.
+        cr->set_line_width (2.0 * s);
+        constexpr double color_labels[6][3] = {
+            {1, 0, 0}, // R
+            {0, 1, 0}, // G
+            {0, 0, 1}, // B
+            {0, 1, 1}, // C
+            {1, 0, 1}, // M
+            {1, 1, 0}, // Y
+        };
+        for (int i = 0; i < 3; i++) {
+            auto gradient = Cairo::LinearGradient::create(-line_length, 0, line_length, 0);
+            const double (&color_1)[3] = color_labels[i];
+            const double (&color_2)[3] = color_labels[i + 3];
+            cr->set_source(gradient);
+            gradient->add_color_stop_rgba(0, color_2[0], color_2[1], color_2[2], 0.5);
+            gradient->add_color_stop_rgba(0.5, 1, 1, 1, 0.25);
+            gradient->add_color_stop_rgba(1, color_1[0], color_1[1], color_1[2], 0.5);
+            cr->move_to(-line_length, 0);
+            cr->line_to(line_length, 0);
+            cr->rotate_degrees(-120);
+            cr->stroke();
+        }
+        cr->set_line_width (1.0 * s);
+        cr->set_source_rgba (1, 1, 1, 0.25);
+        // 100% saturation circle.
+        cr->arc(0, 0, scope_size / 2.0, 0, 2 * RT_PI);
+        cr->stroke();
+        // 25%, 50%, and 75% saturation.
+        cr->set_dash(ch_ds, 0);
+        for (int i = 1; i < 4; i++) {
+            cr->arc(0, 0, i * scope_size / 8.0, 0, 2 * RT_PI);
+            cr->stroke();
+        }
+        // HSV skin tone line derived from -I axis of YIQ.
+        cr->rotate(-0.134900 * RT_PI);
         cr->move_to(0, 0);
         cr->line_to(line_length, 0);
         cr->stroke();

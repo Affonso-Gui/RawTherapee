@@ -132,8 +132,8 @@ protected:
     /// Used to simulate a lazy update of the raw histogram.
     bool hist_raw_dirty;
     int vectorscopeScale;
-    bool vectorscope_hc_dirty, vectorscope_hs_dirty;
-    array2D<int> vectorscope_hc, vectorscope_hs;
+    bool vectorscope_hc_dirty, vectorscope_hs_dirty, vectorscope_hv_dirty;
+    array2D<int> vectorscope_hc, vectorscope_hs, vectorscope_hv;
     /// Waveform's intensity. Same as height of reference image.
     int waveformScale;
     bool waveform_dirty;

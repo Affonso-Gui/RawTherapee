@@ -164,9 +164,9 @@ protected:
     LUTu rhist, ghist, bhist, lhist, chist;
     LUTu rhistRaw, ghistRaw, bhistRaw, lhistRaw; //lhistRaw is unused?
     int vectorscope_scale;
-    array2D<int> vect_hc, vect_hs;
-    std::vector<unsigned char> vect_hc_buffer, vect_hs_buffer;
-    bool vect_hc_buffer_dirty, vect_hs_buffer_dirty;
+    array2D<int> vect_hc, vect_hs, vect_hv;
+    std::vector<unsigned char> vect_hc_buffer, vect_hs_buffer, vect_hv_buffer;
+    bool vect_hc_buffer_dirty, vect_hs_buffer_dirty, vect_hv_buffer_dirty;
     int waveform_scale;
     array2D<int> rwave, gwave, bwave, lwave;
     std::vector<unsigned char> parade_buffer_r;
@@ -218,6 +218,7 @@ public:
         int vectorscopeScale,
         const array2D<int>& vectorscopeHC,
         const array2D<int>& vectorscopeHS,
+        const array2D<int>& vectorscopeHV,
         int waveformScale,
         const array2D<int>& waveformRed,
         const array2D<int>& waveformGreen,
@@ -333,6 +334,7 @@ public:
         int vectorscopeScale,
         const array2D<int>& vectorscopeHC,
         const array2D<int>& vectorscopeHS,
+        const array2D<int>& vectorscopeHV,
         int waveformScale,
         const array2D<int>& waveformRed,
         const array2D<int>& waveformGreen,
@@ -340,7 +342,7 @@ public:
         const array2D<int>& waveformLuma
     )
     {
-        histogramArea->update(histRed, histGreen, histBlue, histLuma, histChroma, histRedRaw, histGreenRaw, histBlueRaw, vectorscopeScale, vectorscopeHC, vectorscopeHS, waveformScale, waveformRed, waveformGreen, waveformBlue, waveformLuma);
+        histogramArea->update(histRed, histGreen, histBlue, histLuma, histChroma, histRedRaw, histGreenRaw, histBlueRaw, vectorscopeScale, vectorscopeHC, vectorscopeHS, vectorscopeHV, waveformScale, waveformRed, waveformGreen, waveformBlue, waveformLuma);
     }
     // pointermotionlistener interface
     void pointerMoved (bool validPos, const Glib::ustring &profile, const Glib::ustring &profileW, int x, int y, int r, int g, int b, bool isRaw = false) override;
