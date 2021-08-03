@@ -85,6 +85,7 @@ HistogramPanel::HistogramPanel () :
         case ScopeType::HISTOGRAM_RAW:
         case ScopeType::VECTORSCOPE_HC:
         case ScopeType::VECTORSCOPE_HS:
+        case ScopeType::VECTORSCOPE_HV:
             histogramRGBArea = nullptr;
             break;
         case ScopeType::PARADE:
@@ -224,7 +225,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_WAVEFORM"));
     scopeVectHcBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HC"));
     scopeVectHsBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HS"));
-    scopeVectHvBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HS"));
+    scopeVectHvBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HV"));
 
     buttonGrid = Gtk::manage (new Gtk::Grid ());
     buttonGrid->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
@@ -278,6 +279,9 @@ HistogramPanel::HistogramPanel () :
             break;
         case ScopeType::VECTORSCOPE_HC:
             scopeVectHcBtn->set_active();
+            break;
+        case ScopeType::VECTORSCOPE_HV:
+            scopeVectHvBtn->set_active();
             break;
         case ScopeType::NONE:
             break;
@@ -524,6 +528,8 @@ void HistogramPanel::type_selected(Gtk::RadioButton* button)
         new_type = ScopeType::VECTORSCOPE_HC;
     } else if (button == scopeVectHsBtn) {
         new_type = ScopeType::VECTORSCOPE_HS;
+    } else if (button == scopeVectHvBtn) {
+        new_type = ScopeType::VECTORSCOPE_HV;
     }
 
     if (new_type == options.histogramScopeType) {
@@ -582,6 +588,7 @@ void HistogramPanel::type_changed()
             break;
         case ScopeType::VECTORSCOPE_HC:
         case ScopeType::VECTORSCOPE_HS:
+        case ScopeType::VECTORSCOPE_HV:
             showRed->hide();
             showGreen->hide();
             showBlue->hide();
@@ -1208,6 +1215,11 @@ void HistogramArea::update(
                 vectorscope_scale = vectorscopeScale;
                 vect_hc = vectorscopeHC;
                 vect_hc_buffer_dirty = true;
+                break;
+            case ScopeType::VECTORSCOPE_HV:
+                vectorscope_scale = vectorscopeScale;
+                vect_hs = vectorscopeHS;
+                vect_hs_buffer_dirty = true;
                 break;
             case ScopeType::NONE:
                 break;

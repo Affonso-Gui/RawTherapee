@@ -182,6 +182,7 @@ public:
         PARADE,
         VECTORSCOPE_HC,
         VECTORSCOPE_HS,
+        VECTORSCOPE_HV,
         WAVEFORM
     };
 
