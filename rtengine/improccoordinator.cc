@@ -1928,6 +1928,9 @@ void ImProcCoordinator::updatePreviewImage(int todo, bool panningRelatedChange)
             if (hListener->updateVectorscopeHS()) {
                 updateVectorscopeHS();
             }
+            if (hListener->updateVectorscopeHV()) {
+                updateVectorscopeHV();
+            }
             if (hListener->updateWaveform()) {
                 updateWaveforms();
             }
@@ -2252,6 +2255,56 @@ bool ImProcCoordinator::updateVectorscopeHS()
     }
 
     vectorscope_hs_dirty = false;
+    return true;
+}
+
+bool ImProcCoordinator::updateVectorscopeHV()
+{
+    if (!workimg || !vectorscope_hv_dirty) {
+        return false;
+    }
+
+    int x1, y1, x2, y2;
+    params->crop.mapToResized(pW, pH, scale, x1, x2, y1, y2);
+
+    constexpr int size = VECTORSCOPE_SIZE;
+    vectorscope_hv.fill(0);
+
+    vectorscopeScale = (x2 - x1) * (y2 - y1);
+
+#ifdef _OPENMP
+    #pragma omp parallel
+#endif
+    {
+        array2D<int> vectorscopeThr(size, size, ARRAY2D_CLEAR_DATA);
+#ifdef _OPENMP
+        #pragma omp for nowait
+#endif
+        for (int i = y1; i < y2; ++i) {
+            int ofs = (i * pW + x1) * 3;
+            for (int j = x1; j < x2; ++j) {
+                const float red = 257.f * workimg->data[ofs++];
+                const float green = 257.f * workimg->data[ofs++];
+                const float blue = 257.f * workimg->data[ofs++];
+                float h, s, l;
+                Color::rgb2hslfloat(red, green, blue, h, s, l);
+                const auto sincosval = xsincosf(2.f * RT_PI_F * h);
+                const int col = s * sincosval.y * (size / 2) + size / 2;
+                const int row = s * sincosval.x * (size / 2) + size / 2;
+                if (col >= 0 && col < size && row >= 0 && row < size) {
+                    vectorscopeThr[row][col]++;
+                }
+            }
+        }
+#ifdef _OPENMP
+        #pragma omp critical
+#endif
+        {
+            vectorscope_hv += vectorscopeThr;
+        }
+    }
+
+    vectorscope_hv_dirty = false;
     return true;
 }
 
@@ -2796,6 +2849,17 @@ void ImProcCoordinator::requestUpdateVectorscopeHS()
         return;
     }
     bool updated = updateVectorscopeHS();
+    if (updated) {
+        notifyHistogramChanged();
+    }
+}
+
+void ImProcCoordinator::requestUpdateVectorscopeHV()
+{
+    if (!hListener) {
+        return;
+    }
+    bool updated = updateVectorscopeHV();
     if (updated) {
         notifyHistogramChanged();
     }

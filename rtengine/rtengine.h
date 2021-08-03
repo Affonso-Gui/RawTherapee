@@ -354,6 +354,8 @@ public:
     virtual bool updateVectorscopeHC(void) const = 0;
     /** Returns if the listener wants the H-S vectorscope to be updated. */
     virtual bool updateVectorscopeHS(void) const = 0;
+    /** Returns if the listener wants the H-V vectorscope to be updated. */
+    virtual bool updateVectorscopeHV(void) const = 0;
     /** Returns if the listener wants the waveform to be updated. */
     virtual bool updateWaveform(void) const  = 0;
 };
@@ -369,6 +371,8 @@ public:
     virtual void requestUpdateVectorscopeHC() = 0;
     /** Tells the observable to update the H-S vectorscope data. */
     virtual void requestUpdateVectorscopeHS() = 0;
+    /** Tells the observable to update the H-V vectorscope data. */
+    virtual void requestUpdateVectorscopeHV() = 0;
     /** Tells the observable to update the waveform data. */
     virtual void requestUpdateWaveform() = 0;
 };

@@ -219,6 +219,8 @@ protected:
     bool updateVectorscopeHC();
     /// Updates the H-S vectorscope. Returns true unless not updated.
     bool updateVectorscopeHS();
+    /// Updates the H-V vectorscope. Returns true unless not updated.
+    bool updateVectorscopeHV();
     /// Updates all waveforms. Returns true unless not updated.
     bool updateWaveforms();
     void setScale(int prevscale);
@@ -602,6 +604,7 @@ public:
     void requestUpdateHistogramRaw() override;
     void requestUpdateVectorscopeHC() override;
     void requestUpdateVectorscopeHS() override;
+    void requestUpdateVectorscopeHV() override;
     void requestUpdateWaveform() override;
 };
 

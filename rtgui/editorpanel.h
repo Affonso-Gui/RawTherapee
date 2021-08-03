@@ -149,6 +149,7 @@ public:
     bool updateHistogramRaw(void) const override;
     bool updateVectorscopeHC(void) const override;
     bool updateVectorscopeHS(void) const override;
+    bool updateVectorscopeHV(void) const override;
     bool updateWaveform(void) const override;
 
     // HistogramPanelListener

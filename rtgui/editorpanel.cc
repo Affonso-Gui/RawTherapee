@@ -2324,6 +2324,13 @@ bool EditorPanel::updateVectorscopeHS(void) const
         || histogram_scope_type == ScopeType::NONE;
 }
 
+bool EditorPanel::updateVectorscopeHV(void) const
+{
+    return
+        histogram_scope_type == ScopeType::VECTORSCOPE_HV
+        || histogram_scope_type == ScopeType::NONE;
+}
+
 bool EditorPanel::updateWaveform(void) const
 {
     return histogram_scope_type == ScopeType::WAVEFORM
@@ -2353,6 +2360,9 @@ void EditorPanel::scopeTypeChanged(ScopeType new_type)
             break;
         case ScopeType::VECTORSCOPE_HS:
             histogram_observable->requestUpdateVectorscopeHS();
+            break;
+        case ScopeType::VECTORSCOPE_HV:
+            histogram_observable->requestUpdateVectorscopeHV();
             break;
         case ScopeType::PARADE:
         case ScopeType::WAVEFORM:
