@@ -287,6 +287,7 @@ protected:
     Gtk::RadioButton* scopeWaveBtn;
     Gtk::RadioButton* scopeVectHcBtn;
     Gtk::RadioButton* scopeVectHsBtn;
+    Gtk::RadioButton* scopeVectHvBtn;
 
     Gtk::Image *redImage;
     Gtk::Image *greenImage;

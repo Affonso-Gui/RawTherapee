@@ -155,12 +155,14 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn = Gtk::manage(new Gtk::RadioButton(scopeTypeGroup));
     scopeVectHcBtn = Gtk::manage(new Gtk::RadioButton(scopeTypeGroup));
     scopeVectHsBtn = Gtk::manage(new Gtk::RadioButton(scopeTypeGroup));
+    scopeVectHvBtn = Gtk::manage(new Gtk::RadioButton(scopeTypeGroup));
     scopeHistBtn->set_mode(false);
     scopeHistRawBtn->set_mode(false);
     scopeParadeBtn->set_mode(false);
     scopeWaveBtn->set_mode(false);
     scopeVectHcBtn->set_mode(false);
     scopeVectHsBtn->set_mode(false);
+    scopeVectHvBtn->set_mode(false);
 
     showRed->set_name("histButton");
     showRed->set_can_focus(false);
@@ -190,6 +192,8 @@ HistogramPanel::HistogramPanel () :
     scopeVectHcBtn->set_can_focus(false);
     scopeVectHsBtn->set_name("histButton");
     scopeVectHsBtn->set_can_focus(false);
+    scopeVectHvBtn->set_name("histButton");
+    scopeVectHvBtn->set_can_focus(false);
 
     showRed->set_relief (Gtk::RELIEF_NONE);
     showGreen->set_relief (Gtk::RELIEF_NONE);
@@ -205,6 +209,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->set_relief (Gtk::RELIEF_NONE);
     scopeVectHcBtn->set_relief (Gtk::RELIEF_NONE);
     scopeVectHsBtn->set_relief (Gtk::RELIEF_NONE);
+    scopeVectHvBtn->set_relief (Gtk::RELIEF_NONE);
 
     showRed->set_tooltip_text   (M("HISTOGRAM_TOOLTIP_R"));
     showGreen->set_tooltip_text (M("HISTOGRAM_TOOLTIP_G"));
@@ -219,6 +224,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_WAVEFORM"));
     scopeVectHcBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HC"));
     scopeVectHsBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HS"));
+    scopeVectHvBtn->set_tooltip_text(M("HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HS"));
 
     buttonGrid = Gtk::manage (new Gtk::Grid ());
     buttonGrid->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
@@ -253,6 +259,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->set_image(*waveImage);
     scopeVectHcBtn->set_image(*vectHcImage);
     scopeVectHsBtn->set_image(*vectHsImage);
+    scopeVectHvBtn->set_image(*vectHsImage);
     switch(options.histogramScopeType) {
         case ScopeType::HISTOGRAM:
             scopeHistBtn->set_active();
@@ -293,6 +300,7 @@ HistogramPanel::HistogramPanel () :
     setExpandAlignProperties(scopeWaveBtn, true, false, Gtk::ALIGN_FILL, Gtk::ALIGN_FILL);
     setExpandAlignProperties(scopeVectHcBtn, true, false, Gtk::ALIGN_FILL, Gtk::ALIGN_FILL);
     setExpandAlignProperties(scopeVectHsBtn, true, false, Gtk::ALIGN_FILL, Gtk::ALIGN_FILL);
+    setExpandAlignProperties(scopeVectHvBtn, true, false, Gtk::ALIGN_FILL, Gtk::ALIGN_FILL);
     setExpandAlignProperties(persistentButtons, false, true, Gtk::ALIGN_START, Gtk::ALIGN_FILL);
     setExpandAlignProperties(optionButtons, false, true, Gtk::ALIGN_START, Gtk::ALIGN_FILL);
 
@@ -310,6 +318,7 @@ HistogramPanel::HistogramPanel () :
     scopeWaveBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeWaveBtn));
     scopeVectHcBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHcBtn));
     scopeVectHsBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHsBtn));
+    scopeVectHvBtn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &HistogramPanel::type_selected), scopeVectHsBtn));
 
     brightnessWidget = Gtk::manage(new Gtk::Scale(Gtk::ORIENTATION_VERTICAL));
     brightnessWidget->set_inverted();
@@ -335,6 +344,7 @@ HistogramPanel::HistogramPanel () :
     persistentButtons->add(*scopeHistRawBtn);
     persistentButtons->add(*scopeParadeBtn);
     persistentButtons->add(*scopeWaveBtn);
+    persistentButtons->add(*scopeVectHvBtn);
     persistentButtons->add(*scopeVectHsBtn);
     persistentButtons->add(*scopeVectHcBtn);
     persistentButtons->add(*separator);
