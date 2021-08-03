@@ -2289,8 +2289,8 @@ bool ImProcCoordinator::updateVectorscopeHV()
                 float h, s, l;
                 Color::rgb2hslfloat(red, green, blue, h, s, l);
                 const auto sincosval = xsincosf(2.f * RT_PI_F * h);
-                const int col = s * sincosval.y * (size / 2) + size / 2;
-                const int row = s * sincosval.x * (size / 2) + size / 2;
+                const int col = s * l * sincosval.y * (size / 2) + size / 2;
+                const int row = s * l * sincosval.x * (size / 2) + size / 2;
                 if (col >= 0 && col < size && row >= 0 && row < size) {
                     vectorscopeThr[row][col]++;
                 }

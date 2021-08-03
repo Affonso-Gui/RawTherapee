@@ -1711,7 +1711,8 @@ void HistogramArea::drawVectorscope(Cairo::RefPtr<Cairo::Context> &cr, int w, in
     cr->set_antialias(Cairo::ANTIALIAS_SUBPIXEL);
     ch_ds[0] = 4;
 
-    if (scopeType == ScopeType::VECTORSCOPE_HS) { // Hue-Saturation.
+    if (scopeType == ScopeType::VECTORSCOPE_HS ||
+        scopeType == ScopeType::VECTORSCOPE_HV) { // Hue-Saturation.
         // RYGCBM lines.
         cr->set_line_width (2.0 * s);
         constexpr double color_labels[6][3] = {
@@ -1787,47 +1788,6 @@ void HistogramArea::drawVectorscope(Cairo::RefPtr<Cairo::Context> &cr, int w, in
         // CIELAB skin tone line, approximated by 50% saturation and
         // value along the HSV skin tone line.
         cr->rotate(-0.321713 * RT_PI);
-        cr->move_to(0, 0);
-        cr->line_to(line_length, 0);
-        cr->stroke();
-        cr->unset_dash();
-    } else if (scopeType == ScopeType::VECTORSCOPE_HV) { // Hue-Saturation.
-        // RYGCBM lines.
-        cr->set_line_width (2.0 * s);
-        constexpr double color_labels[6][3] = {
-            {1, 0, 0}, // R
-            {0, 1, 0}, // G
-            {0, 0, 1}, // B
-            {0, 1, 1}, // C
-            {1, 0, 1}, // M
-            {1, 1, 0}, // Y
-        };
-        for (int i = 0; i < 3; i++) {
-            auto gradient = Cairo::LinearGradient::create(-line_length, 0, line_length, 0);
-            const double (&color_1)[3] = color_labels[i];
-            const double (&color_2)[3] = color_labels[i + 3];
-            cr->set_source(gradient);
-            gradient->add_color_stop_rgba(0, color_2[0], color_2[1], color_2[2], 0.5);
-            gradient->add_color_stop_rgba(0.5, 1, 1, 1, 0.25);
-            gradient->add_color_stop_rgba(1, color_1[0], color_1[1], color_1[2], 0.5);
-            cr->move_to(-line_length, 0);
-            cr->line_to(line_length, 0);
-            cr->rotate_degrees(-120);
-            cr->stroke();
-        }
-        cr->set_line_width (1.0 * s);
-        cr->set_source_rgba (1, 1, 1, 0.25);
-        // 100% saturation circle.
-        cr->arc(0, 0, scope_size / 2.0, 0, 2 * RT_PI);
-        cr->stroke();
-        // 25%, 50%, and 75% saturation.
-        cr->set_dash(ch_ds, 0);
-        for (int i = 1; i < 4; i++) {
-            cr->arc(0, 0, i * scope_size / 8.0, 0, 2 * RT_PI);
-            cr->stroke();
-        }
-        // HSV skin tone line derived from -I axis of YIQ.
-        cr->rotate(-0.134900 * RT_PI);
         cr->move_to(0, 0);
         cr->line_to(line_length, 0);
         cr->stroke();
