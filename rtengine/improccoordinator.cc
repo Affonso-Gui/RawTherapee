@@ -50,6 +50,7 @@ namespace
 {
 
 constexpr int VECTORSCOPE_SIZE = 128;
+constexpr int HUE_DIVISIONS = 360;
 
 }
 
@@ -2276,10 +2277,11 @@ bool ImProcCoordinator::updateVectorscopeHV()
     #pragma omp parallel
 #endif
     {
-        array2D<int> vectorscopeThr(size, size, ARRAY2D_CLEAR_DATA);
-#ifdef _OPENMP
-        #pragma omp for nowait
-#endif
+        float total = 0.;
+        float hue_arr[HUE_DIVISIONS] = {0};
+        int sampling_range = HUE_DIVISIONS / 24;
+
+        // TODO: parallel computation ?
         for (int i = y1; i < y2; ++i) {
             int ofs = (i * pW + x1) * 3;
             for (int j = x1; j < x2; ++j) {
@@ -2288,20 +2290,36 @@ bool ImProcCoordinator::updateVectorscopeHV()
                 const float blue = 257.f * workimg->data[ofs++];
                 float h, s, l;
                 Color::rgb2hslfloat(red, green, blue, h, s, l);
-                const auto sincosval = xsincosf(2.f * RT_PI_F * h);
                 const float w = std::min(1.0, s * l * 2.0);
-                const int col = w * sincosval.y * (size / 2) + size / 2;
-                const int row = w * sincosval.x * (size / 2) + size / 2;
-                if (col >= 0 && col < size && row >= 0 && row < size) {
-                    vectorscopeThr[row][col]++;
-                }
+                hue_arr[(int)(h * HUE_DIVISIONS)] += w;
             }
         }
-#ifdef _OPENMP
-        #pragma omp critical
-#endif
-        {
-            vectorscope_hv += vectorscopeThr;
+
+        // compute totals
+        for (int i=0; i<HUE_DIVISIONS; i++) {
+          total += hue_arr[i];
+        }
+
+        // for each color
+        for (int i=0; i<HUE_DIVISIONS; i++) {
+          float color_total = 0.0;
+          // for color range
+          for (int j = -sampling_range; j < sampling_range; j++) {
+            int index = i + j;
+            if (index < 0) index += HUE_DIVISIONS;
+            if (index >= HUE_DIVISIONS) index -= HUE_DIVISIONS;
+            color_total += hue_arr[index];
+          }
+
+          // get coordinates
+          const auto sincosval = xsincosf(2.f * RT_PI_F * i / HUE_DIVISIONS);
+          const float w = color_total / total;
+
+          const int col = w * sincosval.y * (size / 2) + size / 2;
+          const int row = w * sincosval.x * (size / 2) + size / 2;
+          if (col >= 0 && col < size && row >= 0 && row < size) {
+            vectorscope_hv[row][col] = 1000;
+          }
         }
     }
 
