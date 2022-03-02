@@ -40,22 +40,7 @@ void ImProcFunctions::resizeWidth (Imagefloat* src, Imagefloat* dst, float dScal
     time_t t1 = clock();
 #endif
 
-    // Nearest neighbour algorithm
-#ifdef _OPENMP
-#pragma omp parallel for if (multiThread)
-#endif
-
-    for (int i = 0; i < dst->getHeight(); i++) {
-      int sy = LIM (i, 0, src->getHeight() - 1);
-
-      for (int j = 0; j < dst->getWidth(); j++) {
-        int sx = j / dScale;
-        sx = LIM (sx, 0, src->getWidth() - 1);
-        dst->r (i, j) = src->r (sy, sx);
-        dst->g (i, j) = src->g (sy, sx);
-        dst->b (i, j) = src->b (sy, sx);
-      }
-    }
+    Lanczos (src, dst, dScale, 1.0f);
 
 #ifdef PROFILE
     time_t t2 = clock();
