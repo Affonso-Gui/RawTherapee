@@ -49,10 +49,12 @@ static inline float Lanc (float x, float a)
     }
 }
 
-void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float scale)
+void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float wScale, float hScale)
 {
 
-    const float delta = 1.0f / scale;
+    const float scale = max (wScale, hScale);
+    const float delta_w = 1.0f / wScale;
+    const float delta_h = 1.0f / hScale;
     const float a = 3.0f;
     const float sc = min (scale, 1.0f);
     const int support = static_cast<int> (2.0f * a / sc) + 1;
@@ -76,7 +78,7 @@ void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float sca
         for (int j = 0; j < dst->getWidth(); j++) {
 
             // x coord of the center of pixel on src image
-            float x0 = (static_cast<float> (j) + 0.5f) * delta - 0.5f;
+            float x0 = (static_cast<float> (j) + 0.5f) * delta_w - 0.5f;
 
             // weights for interpolation in horisontal direction
             float * w = wwh + j * support;
@@ -109,7 +111,7 @@ void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float sca
         for (int i = 0; i < dst->getHeight(); i++) {
 
             // y coord of the center of pixel on src image
-            float y0 = (static_cast<float> (i) + 0.5f) * delta - 0.5f;
+            float y0 = (static_cast<float> (i) + 0.5f) * delta_h - 0.5f;
 
             // weights for interpolation in y direction
             float w[support];
@@ -185,9 +187,11 @@ void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float sca
 }
 
 
-void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float scale)
+void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float wScale, float hScale)
 {
-    const float delta = 1.0f / scale;
+    const float scale = max (wScale, hScale);
+    const float delta_w = 1.0f / wScale;
+    const float delta_h = 1.0f / hScale;
     constexpr float a = 3.0f;
     const float sc = min(scale, 1.0f);
     const int support = static_cast<int> (2.0f * a / sc) + 1;
@@ -201,7 +205,7 @@ void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float scale)
     for (int j = 0; j < dst->W; j++) {
 
         // x coord of the center of pixel on src image
-        float x0 = (static_cast<float> (j) + 0.5f) * delta - 0.5f;
+        float x0 = (static_cast<float> (j) + 0.5f) * delta_w - 0.5f;
 
         // weights for interpolation in horizontal direction
         float * w = wwh + j * support;
@@ -248,7 +252,7 @@ void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float scale)
 
         for (int i = 0; i < dst->H; i++) {
             // y coord of the center of pixel on src image
-            float y0 = (static_cast<float> (i) + 0.5f) * delta - 0.5f;
+            float y0 = (static_cast<float> (i) + 0.5f) * delta_h - 0.5f;
 
             // sum of weights used for normalization
             float ws = 0.0f;
@@ -331,6 +335,14 @@ void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float scale)
     delete[] jj0;
     delete[] jj1;
     delete[] wwh;
+}
+
+void ImProcFunctions::Lanczos (const Imagefloat* src, Imagefloat* dst, float scale) {
+  return Lanczos(src, dst, scale, scale);
+}
+
+void ImProcFunctions::Lanczos (const LabImage* src, LabImage* dst, float scale) {
+  return Lanczos(src, dst, scale, scale);
 }
 
 float ImProcFunctions::resizeScale (const ProcParams* params, int fw, int fh, int &imw, int &imh)
