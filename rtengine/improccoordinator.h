@@ -286,6 +286,12 @@ protected:
     LUTf lmasklclocalcurve;
     LUTf lmaskloglocalcurve;
     LUTf lmasklocal_curve;
+    LUTf lmaskcielocalcurve;
+    LUTf cielocalcurve;
+    LUTf cielocalcurve2;
+    LUTf jzlocalcurve;
+    LUTf czlocalcurve;
+    LUTf czjzlocalcurve;
     
     LocretigainCurve locRETgainCurve;
     LocretitransCurve locRETtransCurve;
@@ -293,6 +299,9 @@ protected:
     LocLHCurve loclhCurve;
     LocHHCurve lochhCurve;
     LocCHCurve locchCurve;
+    LocHHCurve lochhCurvejz;
+    LocCHCurve locchCurvejz;
+    LocLHCurve loclhCurvejz;
     LocCCmaskCurve locccmasCurve;
     LocLLmaskCurve locllmasCurve;
     LocHHmaskCurve lochhmasCurve;
@@ -328,6 +337,9 @@ protected:
     LocCCmaskCurve locccmaslogCurve;
     LocLLmaskCurve locllmaslogCurve;
     LocHHmaskCurve lochhmaslogCurve;
+    LocCCmaskCurve locccmascieCurve;
+    LocLLmaskCurve locllmascieCurve;
+    LocHHmaskCurve lochhmascieCurve;
     
     LocwavCurve locwavCurve;
     LocwavCurve loclmasCurveblwav;
@@ -340,6 +352,7 @@ protected:
     LocwavCurve locedgwavCurve;
     LocwavCurve loclmasCurve_wav;
     LocwavCurve locwavCurvehue;
+    LocwavCurve locwavCurvejz;
 
     std::vector<float> huerefs;
     std::vector<float> huerefblurs;
@@ -371,6 +384,7 @@ protected:
     int locallsharMask;
     int localllogMask;
     int locall_Mask;
+    int locallcieMask;
 
 public:
 
@@ -442,7 +456,7 @@ public:
         updaterThreadStart.unlock();
     }
 
-    void setLocallabMaskVisibility(bool previewDeltaE, int locallColorMask, int locallColorMaskinv, int locallExpMask, int locallExpMaskinv, int locallSHMask, int locallSHMaskinv, int locallvibMask, int locallsoftMask, int locallblMask, int localltmMask, int locallretiMask, int locallsharMask, int localllcMask, int locallcbMask, int localllogMask, int locall_Mask) override
+    void setLocallabMaskVisibility(bool previewDeltaE, int locallColorMask, int locallColorMaskinv, int locallExpMask, int locallExpMaskinv, int locallSHMask, int locallSHMaskinv, int locallvibMask, int locallsoftMask, int locallblMask, int localltmMask, int locallretiMask, int locallsharMask, int localllcMask, int locallcbMask, int localllogMask, int locall_Mask, int locallcieMask) override
     {
         this->previewDeltaE = previewDeltaE;
         this->locallColorMask = locallColorMask;
@@ -461,6 +475,7 @@ public:
         this->locallcbMask = locallcbMask;
         this->localllogMask = localllogMask;
         this->locall_Mask = locall_Mask;
+        this->locallcieMask = locallcieMask;
     }
 
     void setProgressListener (ProgressListener* pl) override

@@ -2419,7 +2419,7 @@ HISTOGRAM_TOOLTIP_TYPE_VECTORSCOPE_HV;Hue-Dominance Vectorscope
 !HISTORY_MSG_SOFTLIGHT_STRENGTH;Soft light - Strength
 !HISTORY_MSG_TEMPOUT;CAM02 automatic temperature
 !HISTORY_MSG_THRESWAV;Balance threshold
-!HISTORY_MSG_TRANS_Method;Geometry - Method
+!HISTORY_MSG_TRANS_METHOD;Geometry - Method
 !HISTORY_MSG_WAVBALCHROM;Equalizer chrominance
 !HISTORY_MSG_WAVBALLUM;Equalizer luminance
 !HISTORY_MSG_WAVBL;Blur levels

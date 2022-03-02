@@ -1200,7 +1200,8 @@ void HistogramArea::update(
                 bhistRaw = histBlueRaw;
                 break;
             case ScopeType::PARADE:
-            case ScopeType::WAVEFORM:
+            case ScopeType::WAVEFORM: {
+                MyWriterLock wave_lock(wave_mutex);
                 waveform_scale = waveformScale;
                 rwave = waveformRed;
                 gwave = waveformGreen;
@@ -1208,6 +1209,7 @@ void HistogramArea::update(
                 lwave = waveformLuma;
                 parade_buffer_r_dirty = parade_buffer_g_dirty = parade_buffer_b_dirty = wave_buffer_dirty = wave_buffer_luma_dirty = true;
                 break;
+            }
             case ScopeType::VECTORSCOPE_HS:
                 vectorscope_scale = vectorscopeScale;
                 vect_hs = vectorscopeHS;
@@ -1337,6 +1339,7 @@ void HistogramArea::updateBackBuffer ()
 
     cr->unset_dash();
 
+    MyReaderLock wave_lock(wave_mutex);
     if (valid && (scopeType == ScopeType::HISTOGRAM || scopeType == ScopeType::HISTOGRAM_RAW)) {
         bool rawMode = scopeType == ScopeType::HISTOGRAM_RAW;
 
@@ -1455,6 +1458,7 @@ void HistogramArea::updateBackBuffer ()
                scopeType == ScopeType::VECTORSCOPE_HV) {
         drawVectorscope(cr, w, h);
     }
+    wave_lock.release();
 
     // Draw the frame's border
     style->render_frame(cr, 0, 0, surface->get_width(), surface->get_height());
