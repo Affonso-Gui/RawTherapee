@@ -29,6 +29,8 @@
 using namespace rtengine;
 using namespace rtengine::procparams;
 
+const Glib::ustring ResizeWidth::TOOL_NAME = "resizewidth";
+
 ResizeWidth::ResizeWidth(): FoldableToolPanel(this, "resizewidth", M("TP_RESIZE_WIDTH_LABEL"), false, true)
 {
     auto m = ProcEventMapper::getInstance();

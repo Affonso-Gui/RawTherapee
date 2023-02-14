@@ -276,6 +276,7 @@ public:
         CH_MIXER,
         BLACK_WHITE,
         RESIZE_TOOL,
+        RESIZE_WIDTH_TOOL,
         PR_SHARPENING,
         CROP_TOOL,
         ICM,

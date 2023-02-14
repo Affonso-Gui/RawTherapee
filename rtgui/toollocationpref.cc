@@ -127,6 +127,8 @@ Glib::ustring getToolTitleKey(Tool tool)
         case Tool::BLACK_WHITE:
             return "TP_BWMIX_LABEL";
         case Tool::RESIZE_TOOL:
+            return "TP_RESIZE_WIDTH_LABEL";
+        case Tool::RESIZE_WIDTH_TOOL:
             return "TP_RESIZE_LABEL";
         case Tool::PR_SHARPENING:
             return "TP_PRSHARPENING_LABEL";

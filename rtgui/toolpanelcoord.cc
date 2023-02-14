@@ -161,6 +161,9 @@ const std::vector<ToolTree> TRANSFORM_PANEL_TOOLS = {
         },
     },
     {
+        .id = Tool::RESIZE_WIDTH_TOOL,
+    },
+    {
         .id = Tool::LENS_GEOM,
         .children = {
             {
@@ -620,6 +623,8 @@ std::string ToolPanelCoordinator::getToolName(Tool tool)
             return BlackWhite::TOOL_NAME;
         case Tool::RESIZE_TOOL:
             return Resize::TOOL_NAME;
+        case Tool::RESIZE_WIDTH_TOOL:
+            return ResizeWidth::TOOL_NAME;
         case Tool::PR_SHARPENING:
             return PrSharpening::TOOL_NAME;
         case Tool::CROP_TOOL:
@@ -1966,6 +1971,8 @@ FoldableToolPanel *ToolPanelCoordinator::getFoldableToolPanel(Tool tool) const
             return blackwhite;
         case Tool::RESIZE_TOOL:
             return resize;
+        case Tool::RESIZE_WIDTH_TOOL:
+            return resizewidth;
         case Tool::PR_SHARPENING:
             return prsharpening;
         case Tool::CROP_TOOL:

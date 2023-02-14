@@ -32,6 +32,7 @@ private:
     rtengine::ProcEvent EvResizeWidthStrength;
     
 public:
+    static const Glib::ustring TOOL_NAME;
 
     ResizeWidth();
 
